@@ -39,9 +39,9 @@ public class TouchController : MonoBehaviour
                 touchPoint.transform.position = worldPos;
 
                 // ロボットへ送信
-                var buffer = Encoding.UTF8.GetBytes("move");
+                var buffer = Encoding.UTF8.GetBytes("MOVE");
                 networkStream?.Write(buffer, 0, buffer.Length);
-                Debug.Log("move");
+                Debug.Log("MOVE");
 
             }
         } else if (Input.touchCount == 2)
