@@ -259,7 +259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 150dd01ca47994f4893423291d354bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverAddress: 192.168.1.38
+  serverAddress: 192.168.0.101
   port: 8001
   touchPoint: {fileID: 1890396450}
 --- !u!1 &1890396449
