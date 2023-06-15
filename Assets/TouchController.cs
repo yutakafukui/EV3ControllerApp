@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class TouchController : MonoBehaviour
 {
-    public string serverAddress = "192.168.0.101";
+    public string serverAddress = "192.168.0.101";  // EV3
     public int port = 8001;
     public SpriteRenderer touchPoint = null;
 
