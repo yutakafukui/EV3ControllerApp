@@ -14,12 +14,10 @@ public class TouchController : MonoBehaviour
     private NetworkStream networkStream;
 
     public Vector2 startPos;
+    private bool isConnected = false;
 
     void Start()
     {
-        //tcpClient = new TcpClient(serverAddress, port);
-        //networkStream = tcpClient?.GetStream();
-        //Debug.Log("Connected");
     }
 
     void Update()
@@ -35,54 +33,48 @@ public class TouchController : MonoBehaviour
                     break;
                 case TouchPhase.Moved:
                     var pos = touch.position;
-                    // スクリーン座標からワールド座標
                     var screenPos = new Vector3(pos.x, pos.y, 5f);
-                    var worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+                    var worldPos = Camera.main.ScreenToWorldPoint(screenPos);   // スクリーン座標からワールド座標へ
                     touchPoint.transform.position = worldPos;
-
-                    // ロボットへ送信
-                    //var buffer = Encoding.UTF8.GetBytes("MOVE");
-                    //networkStream?.Write(buffer, 0, buffer.Length);
-                    //Debug.Log("MOVE");
-
                     break;
                 case TouchPhase.Ended:
+                    if (isConnected)    // EV3と接続済みの場合
+                    {
+                        // EV3へ送信
+                        var buffer = Encoding.UTF8.GetBytes("MOVE");
+                        networkStream?.Write(buffer, 0, buffer.Length);
+                        Debug.Log("MOVE");
+                    }
                     break;
             }
 
-            //if (touch.phase == TouchPhase.Began)
-            //{
-            //    var pos = touch.position;
-            //    Debug.Log(pos);
-
-            //    // スクリーン座標からワールド座標
-            //    var screenPos = new Vector3(pos.x, pos.y, 5f);
-            //    var worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-            //    touchPoint.transform.position = worldPos;
-
-            //    // ロボットへ送信
-            //    var buffer = Encoding.UTF8.GetBytes("MOVE");
-            //    networkStream?.Write(buffer, 0, buffer.Length);
-            //    Debug.Log("MOVE");
-
-            //}
         }
         else if (Input.touchCount == 2) // マルチタップ2点
         {
-            // ソケット通信を開始する
-            tcpClient = new TcpClient(serverAddress, port);
-            networkStream = tcpClient?.GetStream();
-            Debug.Log("Connected");
-        }
-        else if (Input.touchCount == 3) // マルチタップ3点
-        {
-            // 終了処理
-            var buffer = Encoding.UTF8.GetBytes("exit");
-            networkStream?.Write(buffer, 0, buffer.Length);
-            Debug.Log("exit");
-            tcpClient?.Close();
-            networkStream?.Close();
-            Debug.Log("Disconnected");
+            var touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Ended)
+            {
+                if (!isConnected)   // EV3と未接続の場合
+                {
+                    // ソケット通信を開始する
+                    tcpClient = new TcpClient(serverAddress, port);
+                    networkStream = tcpClient?.GetStream();
+                    Debug.Log("Connected");
+                    isConnected = true;
+                }
+                else
+                {
+                    // 終了処理
+                    var buffer = Encoding.UTF8.GetBytes("exit");
+                    networkStream?.Write(buffer, 0, buffer.Length);
+                    Debug.Log("exit");
+                    tcpClient?.Close();
+                    networkStream?.Close();
+                    Debug.Log("Disconnected");
+                    isConnected = false;
+                }
+            }
         }
 
     }
