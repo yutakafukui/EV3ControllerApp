@@ -259,10 +259,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 150dd01ca47994f4893423291d354bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverAddress: 192.168.1.43
+  serverAddress: 192.168.0.103
   port: 8001
   touchPoint: {fileID: 1890396450}
-  startPos: {x: 0, y: 0}
 --- !u!1 &1890396449
 GameObject:
   m_ObjectHideFlags: 0
